@@ -1,0 +1,81 @@
+<resources>
+  <!-- Default screen margins, per the Android Design guidelines. -->
+  <dimen name="activity_horizontal_margin">16dp</dimen>
+  <dimen name="activity_vertical_margin">16dp</dimen>
+
+  <!-- Marzin Sizes -->
+  <dimen name="select_item_margin">16dp</dimen>
+  <dimen name="margin_vertical_divider">4dp</dimen>
+  <dimen name="item_card_border_margin">12dp</dimen>
+  <dimen name="list_item_horizontal_margin">16dp</dimen>
+  <dimen name="list_item_vertical_margin">20dp</dimen>
+  <dimen name="list_item_view_bottom_margin">10dp</dimen>
+  <dimen name="second_line_bottom">20dp</dimen>
+
+
+  <!--Recyclerview list item -->
+  <dimen name="card_margin">8dp</dimen>
+
+  <dimen name="margin_very_small">3dp</dimen>
+  <dimen name="margin_small">5dp</dimen>
+  <dimen name="margin_normal">7dp</dimen>
+  <dimen name="margin_large">10dp</dimen>
+  <dimen name="margin_x_large">15dp</dimen>
+  <dimen name="margin_largest">20dp</dimen>
+  <dimen name="margin_xx_large">22dp</dimen>
+  <dimen name="margin_home_menu">12dp</dimen>
+  <dimen name="margin_safety_precaution">60dp</dimen>
+  <dimen name="pager_margin">-25dp</dimen>
+
+  <!-- Padding Sizes -->
+  <dimen name="padding_x_small">2dp</dimen>
+  <dimen name="padding_small">5dp</dimen>
+  <dimen name="padding_normal">10dp</dimen>
+  <dimen name="receiver_input_layout_height">48dp</dimen>
+  <dimen name="padding_max">15dp</dimen>
+  <dimen name="padding_x_max">20dp</dimen>
+  <dimen name="padding_xx_max">30dp</dimen>
+  <dimen name="padding_xxx_max">50dp</dimen>
+
+  <!-- Card Elevation Sizes -->
+  <dimen name="elevation_small">2dp</dimen>
+  <dimen name="elevation_normal">5dp</dimen>
+  <dimen name="elevation_large">8dp</dimen>
+  <dimen name="elevation_x_large">10dp</dimen>
+
+
+  <!--Text Sizes-->
+  <dimen name="txtVeryLittle">8sp</dimen>
+  <dimen name="txtLittle">10sp</dimen>
+  <dimen name="txtVerySmall">12sp</dimen>
+  <dimen name="txtSmall">14sp</dimen>
+  <dimen name="txtNormal">16sp</dimen>
+  <dimen name="txtLarge">18sp</dimen>
+  <dimen name="txtVeryLarge">22sp</dimen>
+  <dimen name="txtSecondMax">25sp</dimen>
+  <dimen name="txtthirdMax">40sp</dimen>
+
+
+  <!--view sizes-->
+  <dimen name="view_height_medium">0.3dp</dimen>
+  <dimen name="button_height">36dp</dimen>
+  <!--Layout sizes-->
+  <dimen name="layout_size">60dp</dimen>
+
+  <!--bg circle-->
+  <dimen name="bg_circle_normal">70dp</dimen>
+
+  <!--circleimageview-->
+  <dimen name="circular_image">80dp</dimen>
+
+  <!--aroma sizes-->
+  <dimen name="aroma_category_size">30dp</dimen>
+
+
+  <!--rangeBar dimen-->
+  <dimen name="trackHeight">3dp</dimen>
+  <dimen name="thumbRadius">14dp</dimen>
+  <dimen name="thumbOutlineSize">1dp</dimen>
+  <dimen name="displayTextFontSize">14sp</dimen>
+  <dimen name="displayTextBasicOffsetY">6dp</dimen>
+</resources>
