@@ -26,8 +26,9 @@ import java.util.HashMap
 import butterknife.BindView
 import butterknife.ButterKnife
 
-class ImageSectionGridAdapter(private val context: Context) : SectionedRecyclerViewAdapter<ImageSectionGridAdapter.HeaderViewHolder,
-        ImageSectionGridAdapter.ChildViewHolder, ImageSectionGridAdapter.FotterViewHolder>() {
+class ImageSectionGridAdapter(private val context: Context, private val listner: onGridImageClickedListner) :
+        SectionedRecyclerViewAdapter<ImageSectionGridAdapter.HeaderViewHolder,
+                ImageSectionGridAdapter.ChildViewHolder, ImageSectionGridAdapter.FotterViewHolder>() {
 
 
     private var map: Map<String, List<ImageDataModel>>? = null
@@ -42,7 +43,8 @@ class ImageSectionGridAdapter(private val context: Context) : SectionedRecyclerV
     }
 
     interface onGridImageClickedListner {
-//fun onGridImageClicked(imageModel ImageDataModel)
+        fun onGridImageClicked(imageModel: ImageDataModel)
+        fun onGridSectionClicked(imageModel: List<ImageDataModel>)
     }
 
     fun setImageDatas(map: Map<String, List<ImageDataModel>>?, headerlist: List<HeaderItemModel>?) {
@@ -79,6 +81,11 @@ class ImageSectionGridAdapter(private val context: Context) : SectionedRecyclerV
 
     override fun onBindSectionHeaderViewHolder(holder: HeaderViewHolder, section: Int) {
         holder.setHeaderDatas(headerList!![section])
+        holder.tvDateHeader.setOnClickListener(View.OnClickListener {
+            holder.startCheckAnimation(section)
+//            secti(section)
+
+        })
 
     }
 
@@ -98,15 +105,47 @@ class ImageSectionGridAdapter(private val context: Context) : SectionedRecyclerV
     inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         @BindView(R.id.tv_date_header)
-        lateinit var tvDateHeader: CheckedTextView
+        lateinit var tvDateHeader: TextView
+        @BindView(R.id.lottie_animation)
+        lateinit var animationView: LottieAnimationView
+        private var animator: ValueAnimator? = null
+
 
         init {
             ButterKnife.bind(this, itemView)
+            animator = ValueAnimator.ofFloat(0f, 1f)
+            animator!!.addUpdateListener { valueAnimator ->
+                animationView.setProgress(valueAnimator.animatedValue as Float)
+            }
         }
 
         fun setHeaderDatas(headerItemModel: HeaderItemModel) {
             tvDateHeader.text = headerItemModel.dateString
+
         }
+
+        fun startCheckAnimation(section: Int) {
+
+
+            val selectedItem = headerList!!.get(section)
+
+            if (animationView.progress == 0f) {
+                animator!!.start();
+                selectedItem.isSelected = true
+            } else {
+                animationView.progress = 0f;
+                selectedItem.isSelected = false
+
+            }
+            map!!.get(headerList!!.get(section).dateString)!!.forEach {
+                it.selected = selectedItem.isSelected
+            }
+
+//            if (listner != null)
+//                listner.onGridImageClicked(selectedItem)
+
+        }
+
     }
 
     inner class FotterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -149,6 +188,8 @@ class ImageSectionGridAdapter(private val context: Context) : SectionedRecyclerV
                 selectedItem.selected = false
 
             }
+            if (listner != null)
+                listner.onGridImageClicked(selectedItem)
 
         }
 

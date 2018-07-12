@@ -25,5 +25,12 @@ object AppConstants {
 
     val FOLDER_ID = "FOLDER_ID"
 
+    val TYPE_IMAMGE = "IMAGE"
+    val TYPE_VIDEO = "VIDEO"
+    val TYPE_AUDIO = "AUDIO"
+    val TYPE_PDF = "PDF"
+    val TYPE_DOC = "DOC"
+    val TYPE_DOCX = "DOCX"
+
 
 }

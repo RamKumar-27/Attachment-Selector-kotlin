@@ -3,18 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
 
-    <CheckedTextView
+    android:background="@color/grayed_white">
+
+    <TextView
         android:id="@+id/tv_date_header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/grayed_white"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:elevation="4dp"
         android:padding="@dimen/padding_normal"
         android:text="CheckedTextView"
         android:textSize="@dimen/txtNormal"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/lottie_animation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_animation"
+        android:layout_width="20dp"
+        android:layout_height="19dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_fileName="check_animation.json" />
+
 </android.support.constraint.ConstraintLayout>

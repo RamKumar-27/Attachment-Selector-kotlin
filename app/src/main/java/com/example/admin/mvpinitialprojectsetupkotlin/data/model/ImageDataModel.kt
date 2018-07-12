@@ -8,7 +8,7 @@ import com.example.admin.mvpinitialprojectsetupkotlin.utils.JavaUtils
 import java.io.File
 import java.util.*
 
-class ImageDataModel(var imageTitle: String?, var imagePath: String?,var  imgId: String) {
+class ImageDataModel(var imageTitle: String?, var imagePath: String?,var  imgId: String,var  type: String) {
 
 
     var duration: String? = null

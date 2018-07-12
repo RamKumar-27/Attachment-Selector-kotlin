@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.MediaStore.MediaColumns
+import com.example.admin.mvpinitialprojectsetupkotlin.app.AppConstants
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.FolderItem
 
 
@@ -230,7 +231,7 @@ object GalleryHelper {
 
             id = cursor.getString(imgId)
 
-            allImages.add(ImageDataModel(imageName, absolutePathOfImage, id))
+            allImages.add(ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE))
         }
 
         // Get all Internal storage images
@@ -252,7 +253,7 @@ object GalleryHelper {
             imageName = cursor.getString(column_index_folder_name)
             id = cursor.getString(imgId)
 
-            allImages.add(ImageDataModel(imageName, absolutePathOfImage, id))
+            allImages.add(ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE))
         }
 
         return allImages
@@ -362,7 +363,7 @@ object GalleryHelper {
 
             id = cursor.getString(imgId)
 
-            allImagesByFolder.add(ImageDataModel(imageName, absolutePathOfImage, id))
+            allImagesByFolder.add(ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE))
         }
 
         // Get all Internal storage images
@@ -385,7 +386,7 @@ object GalleryHelper {
 
             id = cursor.getString(imgId)
 
-            allImagesByFolder.add(ImageDataModel(imageName, absolutePathOfImage, id))
+            allImagesByFolder.add(ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE))
         }
         return allImagesByFolder
     }

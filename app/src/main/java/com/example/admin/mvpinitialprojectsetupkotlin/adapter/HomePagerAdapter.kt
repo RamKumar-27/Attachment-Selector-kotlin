@@ -28,6 +28,8 @@ class HomePagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
             0 -> return "Images"
             1 -> return "Videos"
             2 -> return "Audio"
+            3 -> return "Pdf"
+            4 -> return "doc/docx"
         }
         return ""
     }

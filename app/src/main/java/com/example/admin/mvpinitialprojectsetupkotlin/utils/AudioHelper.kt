@@ -5,6 +5,7 @@ import android.content.CursorLoader
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import com.example.admin.mvpinitialprojectsetupkotlin.app.AppConstants
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.ImageDataModel
 import java.util.ArrayList
 
@@ -58,7 +59,7 @@ object AudioHelper {
             if (cursor.getString(column_index_duration) != null)
                 duration = cursor.getString(column_index_duration)
 
-            var model = ImageDataModel(imageName, absolutePathOfImage, id)
+            var model = ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_AUDIO)
             model.duration = duration
             allVideos.add(model)
         }
@@ -88,7 +89,7 @@ object AudioHelper {
             if (cursor.getString(column_index_duration) != null)
                 duration = cursor.getString(column_index_duration)
 
-            var model = ImageDataModel(imageName, absolutePathOfImage, id)
+            var model = ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_AUDIO)
             model.duration = duration
             allVideos.add(model)
         }

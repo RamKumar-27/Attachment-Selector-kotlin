@@ -19,6 +19,7 @@ import com.example.admin.mvpinitialprojectsetupkotlin.data.model.FolderItem
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.HeaderItemModel
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.ImageDataModel
 import com.example.admin.mvpinitialprojectsetupkotlin.utils.DateTimeUtils
+import com.example.admin.mvpinitialprojectsetupkotlin.utils.DocumentFileHelper
 import com.example.admin.mvpinitialprojectsetupkotlin.utils.GalleryHelper
 import com.squareup.otto.Subscribe
 import com.truizlop.sectionedrecyclerview.SectionedSpanSizeLookup
@@ -34,7 +35,10 @@ import kotlin.Comparator
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class ImagesFragment : BaseFragment(), FolderAdapter.ClickManager, RadioGroup.OnCheckedChangeListener {
+class ImagesFragment : BaseFragment(), FolderAdapter.ClickManager, RadioGroup.OnCheckedChangeListener, ImageSectionGridAdapter.onGridImageClickedListner {
+    override fun onGridSectionClicked(imageModel: List<ImageDataModel>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 
     private var recAdapter: ImagesListAdapter? = null
@@ -57,9 +61,10 @@ class ImagesFragment : BaseFragment(), FolderAdapter.ClickManager, RadioGroup.On
         super.onViewCreated(view, savedInstanceState)
         bus = AppController.getInstanse()!!.getBus()
         bus!!.register(this)
+//        DocumentFileHelper.getPdfListFromStorage(activity!!)
 
         folderAdapter = FolderAdapter(activity!!, this)
-        sectionAdapter = ImageSectionGridAdapter(activity!!)
+        sectionAdapter = ImageSectionGridAdapter(activity!!,this)
         allImageList = GalleryHelper.gettAllImages(activity!!)
         allIFolderItem = GalleryHelper.getImageFolders(activity!!)
 
@@ -123,6 +128,11 @@ class ImagesFragment : BaseFragment(), FolderAdapter.ClickManager, RadioGroup.On
             R.id.rb_by_folder -> setFolderImage()
         }
     }
+
+    override fun onGridImageClicked(imageModel: ImageDataModel) {
+        bus!!.post(imageModel)
+    }
+
 
     private fun setFolderImage() {
         layoutManager = GridLayoutManager(activity, 3)

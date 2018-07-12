@@ -5,96 +5,63 @@ import android.content.CursorLoader
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
+import android.webkit.MimeTypeMap
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.ImageDataModel
 import java.util.ArrayList
 
 object DocumentFileHelper {
 
-    fun getAllAudio(context: Context): List<ImageDataModel> {
+    fun getDocumentListFromStorage(context: Context, extension: String, type: String): ArrayList<ImageDataModel> {
+        val allfiles = ArrayList<ImageDataModel>()
 
-        val allVideos = ArrayList<ImageDataModel>()
+        val pdfResolver = context.getContentResolver()
+        val pdfUri = android.provider.MediaStore.Files.getContentUri("external")
+        val selectionMimeType = MediaStore.Files.FileColumns.MIME_TYPE + "=?"
+        val mimeTypePDF = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+//        val mimeTypeDOC = MimeTypeMap.getSingleton().getMimeTypeFromExtension("doc")
+        val selectionArgsPdf = arrayOf(mimeTypePDF)
+        val pdfCursor = pdfResolver.query(pdfUri, null, selectionMimeType, selectionArgsPdf, null)
+        if (pdfCursor != null && pdfCursor!!.moveToFirst()) {
+            //get columns
+            val pdfPath = pdfCursor!!.getColumnIndex(android.provider.MediaStore.Files.FileColumns.DATA)
 
-        allVideos.clear()
-        var uri: Uri
-        var cursor: Cursor?
-        var column_index_data: Int
-        var column_index_folder_name: Int
-        var column_index_duration: Int
+            val column_index_folder_name = pdfCursor!!.getString(pdfCursor.getColumnIndex(android.provider.MediaStore.Files.FileColumns.DISPLAY_NAME))
 
-        var absolutePathOfImage: String? = null
-        var imageName: String
-        var duration: String? = null
-        var id: String? = null
-        var imgId: Int
 
-        //get all images from external storage
+            val imgId = pdfCursor!!.getString(pdfCursor!!.getColumnIndex(android.provider.MediaStore.Files.FileColumns._ID))
+            //add songs to list
+            do {
+                val thisPath = pdfCursor!!.getString(pdfPath)
 
-        uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf(MediaStore.Audio.AudioColumns.DATA,
-                MediaStore.Audio.AudioColumns.DISPLAY_NAME, MediaStore.Audio.AudioColumns.DURATION)
-        val cursorLoader = CursorLoader(context, uri, projection, null, null,
-                MediaStore.Audio.Media.DATE_MODIFIED + " DESC")
-
-        //    cursor = activity.getContentResolver().query(uri, projection, null, null, null);
-        cursor = cursorLoader.loadInBackground()
-        //        cursor = context.getContentResolver().query(uri, projection, null, null, null);
-
-        column_index_data = cursor!!.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATA)
-
-        column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DISPLAY_NAME)
-
-        column_index_duration = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DURATION)
-
-        imgId = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-
-        while (cursor.moveToNext()) {
-
-            id = cursor.getString(imgId)
-
-            absolutePathOfImage = cursor.getString(column_index_data)
-
-            imageName = cursor.getString(column_index_folder_name)
-
-            if (cursor.getString(column_index_duration) != null)
-                duration = cursor.getString(column_index_duration)
-
-            var model = ImageDataModel(imageName, absolutePathOfImage, id)
-            model.duration = duration
-            allVideos.add(model)
+                var model = ImageDataModel(column_index_folder_name, thisPath, imgId, type)
+                allfiles.add(model)
+                Log.e(extension, thisPath)
+            } while (pdfCursor!!.moveToNext())
         }
 
-        // Get all Internal storage Videos
+        val pdfInternalUri = android.provider.MediaStore.Files.getContentUri("internal")
+//        val mimeTypeDOC = MimeTypeMap.getSingleton().getMimeTypeFromExtension("doc")
+        val pdfInternalCursor = pdfResolver.query(pdfInternalUri, null, selectionMimeType, selectionArgsPdf, null)
+        if (pdfInternalCursor != null && pdfInternalCursor!!.moveToFirst()) {
+            //get columns
+            val pdfPath = pdfInternalCursor!!.getColumnIndex(android.provider.MediaStore.Files.FileColumns.DATA)
 
-        uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-
-        cursor = context.contentResolver.query(uri, projection, null, null, null)
-
-        column_index_data = cursor!!.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATA)
-
-        column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DISPLAY_NAME)
-
-        column_index_duration = cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DURATION)
-
-        imgId = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-
-        while (cursor.moveToNext()) {
-
-            id = cursor.getString(imgId)
+            val column_index_folder_name = pdfInternalCursor!!.getString(pdfInternalCursor.getColumnIndex(android.provider.MediaStore.Files.FileColumns.DISPLAY_NAME))
 
 
-            absolutePathOfImage = cursor.getString(column_index_data)
+            val imgId = pdfInternalCursor!!.getString(pdfInternalCursor!!.getColumnIndex(android.provider.MediaStore.Files.FileColumns._ID))
+            //add songs to list
+            do {
+                val thisPath = pdfInternalCursor!!.getString(pdfPath)
 
-            imageName = cursor.getString(column_index_folder_name)
-
-            if (cursor.getString(column_index_duration) != null)
-                duration = cursor.getString(column_index_duration)
-
-            var model = ImageDataModel(imageName, absolutePathOfImage, id)
-            model.duration = duration
-            allVideos.add(model)
+                var model = ImageDataModel(column_index_folder_name, thisPath, imgId, type)
+                allfiles.add(model)
+                Log.e(extension, thisPath)
+            } while (pdfInternalCursor!!.moveToNext())
         }
-
-        return allVideos
+        return allfiles
     }
+
 
 }
