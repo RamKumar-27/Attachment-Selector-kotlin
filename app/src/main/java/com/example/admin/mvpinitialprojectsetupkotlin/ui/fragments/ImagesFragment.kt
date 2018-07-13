@@ -1,9 +1,7 @@
 package com.example.admin.mvpinitialprojectsetupkotlin.ui.fragments
 
 import android.os.Bundle
-import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,28 +12,24 @@ import com.example.admin.mvpinitialprojectsetupkotlin.adapter.*
 import com.example.admin.mvpinitialprojectsetupkotlin.app.AppController
 import com.example.admin.mvpinitialprojectsetupkotlin.base.BaseFragment
 import com.example.admin.mvpinitialprojectsetupkotlin.base.MainThreadBus
-import com.example.admin.mvpinitialprojectsetupkotlin.data.HomeBackPressEvent
+import com.example.admin.mvpinitialprojectsetupkotlin.data.eventBus.*
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.FolderItem
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.HeaderItemModel
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.ImageDataModel
 import com.example.admin.mvpinitialprojectsetupkotlin.utils.DateTimeUtils
-import com.example.admin.mvpinitialprojectsetupkotlin.utils.DocumentFileHelper
 import com.example.admin.mvpinitialprojectsetupkotlin.utils.GalleryHelper
 import com.squareup.otto.Subscribe
 import com.truizlop.sectionedrecyclerview.SectionedSpanSizeLookup
 import io.reactivex.Flowable
-import io.reactivex.SingleSource
-import io.reactivex.flowables.GroupedFlowable
-import io.reactivex.functions.BiConsumer
 import io.reactivex.functions.Function
 import kotlinx.android.synthetic.main.fragment_images.*
-import org.zakariya.stickyheaders.StickyHeaderLayoutManager
 import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class ImagesFragment : BaseFragment(), FolderAdapter.ClickManager, RadioGroup.OnCheckedChangeListener, ImageSectionGridAdapter.onGridImageClickedListner {
+class ImagesFragment : BaseFragment(), FolderAdapter.ClickManager, RadioGroup.OnCheckedChangeListener, ImageSectionGridAdapter.onGridImageClickedListner, ImagesListAdapter.onFolderImageClickedListner {
+
     override fun onGridSectionClicked(imageModel: List<ImageDataModel>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -61,18 +55,25 @@ class ImagesFragment : BaseFragment(), FolderAdapter.ClickManager, RadioGroup.On
         super.onViewCreated(view, savedInstanceState)
         bus = AppController.getInstanse()!!.getBus()
         bus!!.register(this)
-//        DocumentFileHelper.getPdfListFromStorage(activity!!)
 
         folderAdapter = FolderAdapter(activity!!, this)
-        sectionAdapter = ImageSectionGridAdapter(activity!!,this)
-        allImageList = GalleryHelper.gettAllImages(activity!!)
-        allIFolderItem = GalleryHelper.getImageFolders(activity!!)
+        sectionAdapter = ImageSectionGridAdapter(activity!!, this)
 
         rg_image_type.setOnCheckedChangeListener(this)
         rg_image_type.check(R.id.rb_all_image)
+        bus!!.post(RequestDataEvent(true))
 
+    }
+
+    @Subscribe
+    fun reciveAllImages(event: ImagesDataEvent) {
+        allImageList = event.imgList
         convertToMap()
+    }
 
+    @Subscribe
+    fun reciveAllFolders(event: FolderDataEvent) {
+        allIFolderItem = event.folderList
     }
 
     private fun convertToMap() {
@@ -133,6 +134,14 @@ class ImagesFragment : BaseFragment(), FolderAdapter.ClickManager, RadioGroup.On
         bus!!.post(imageModel)
     }
 
+    override fun onFolderImageClicked(imageModel: ImageDataModel) {
+        bus!!.post(imageModel)
+        allImageList!!.forEach {
+            if (it.imgId.equals(imageModel.imgId))
+                it.selected = imageModel.selected
+        }
+    }
+
 
     private fun setFolderImage() {
         layoutManager = GridLayoutManager(activity, 3)
@@ -145,7 +154,7 @@ class ImagesFragment : BaseFragment(), FolderAdapter.ClickManager, RadioGroup.On
 
 
     private fun setAllImages(itemList: List<ImageDataModel>) {
-        recAdapter = ImagesListAdapter(activity!!, false)
+        recAdapter = ImagesListAdapter(activity!!, false, this)
         images_rec_view.adapter = recAdapter
         recAdapter!!.setImageList(itemList)
     }
@@ -153,7 +162,12 @@ class ImagesFragment : BaseFragment(), FolderAdapter.ClickManager, RadioGroup.On
 
     override fun onItemClick(folderItem: FolderItem) {
         isFolderDetailEnable = true
-        setAllImages(GalleryHelper.getImagesFromFolderID(activity!!, folderItem.folderId!!))
+        bus!!.post(RequestFolderDataEvent(true, folderItem.folderId!!))
+    }
+
+    @Subscribe
+    fun reciveFolderDetailImages(event: FolderDetailImagesDataEvent) {
+        setAllImages(event.imgList)
     }
 
     @Subscribe

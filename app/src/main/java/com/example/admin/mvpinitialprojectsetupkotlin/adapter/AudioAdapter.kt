@@ -17,7 +17,7 @@ import com.example.admin.mvpinitialprojectsetupkotlin.data.model.HeaderItemModel
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.ImageDataModel
 import java.util.*
 
-class AudioAdapter(val context: Context) : RecyclerView.Adapter<AudioAdapter.FolderDetailViewHolder>() {
+class AudioAdapter(val context: Context, val listner: onAudioClickedListner) : RecyclerView.Adapter<AudioAdapter.FolderDetailViewHolder>() {
 
     private var audioList: ArrayList<ImageDataModel>?
     private val inflater: LayoutInflater
@@ -25,6 +25,10 @@ class AudioAdapter(val context: Context) : RecyclerView.Adapter<AudioAdapter.Fol
     init {
         audioList = ArrayList()
         inflater = LayoutInflater.from(context)
+    }
+
+    interface onAudioClickedListner {
+        fun onAudioClicked(imageModel: ImageDataModel)
     }
 
     fun setImageList(itemList: List<ImageDataModel>) {
@@ -109,6 +113,8 @@ class AudioAdapter(val context: Context) : RecyclerView.Adapter<AudioAdapter.Fol
                 selectedItem.selected = false
 
             }
+            if (listner != null)
+                listner.onAudioClicked(selectedItem)
         }
 
 

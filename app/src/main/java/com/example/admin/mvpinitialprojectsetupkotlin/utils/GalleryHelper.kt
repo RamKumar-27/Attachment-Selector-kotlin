@@ -6,7 +6,6 @@ import android.content.CursorLoader
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import android.provider.MediaStore.MediaColumns
 import com.example.admin.mvpinitialprojectsetupkotlin.app.AppConstants
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.FolderItem
 
@@ -14,9 +13,9 @@ import com.example.admin.mvpinitialprojectsetupkotlin.data.model.FolderItem
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.ImageDataModel
 
 import java.io.File
-import java.util.ArrayList
 import java.util.HashMap
 import java.util.TreeSet
+import kotlin.collections.ArrayList
 
 object GalleryHelper {
 
@@ -191,7 +190,7 @@ object GalleryHelper {
      * @param context the activity
      * @return ArrayList with images Path
      */
-    fun gettAllImages(context: Context): List<ImageDataModel> {
+    fun gettAllImages(context: Context, selectedId: ArrayList<String>): List<ImageDataModel> {
 
         //Remove older images to avoid copying same image twice
 
@@ -230,8 +229,10 @@ object GalleryHelper {
             imageName = cursor.getString(column_index_folder_name)
 
             id = cursor.getString(imgId)
-
-            allImages.add(ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE))
+            val model = ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE)
+            if (selectedId.contains(id))
+                model.selected = true
+            allImages.add(model)
         }
 
         // Get all Internal storage images
@@ -253,7 +254,11 @@ object GalleryHelper {
             imageName = cursor.getString(column_index_folder_name)
             id = cursor.getString(imgId)
 
-            allImages.add(ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE))
+            val model = ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE)
+            if (selectedId.contains(id))
+                model.selected = true
+            allImages.add(model)
+
         }
 
         return allImages
@@ -301,30 +306,9 @@ object GalleryHelper {
         return folderItemList;
     }
 
-    fun getImagesFromFolderID(context: Context, folderID: String): List<ImageDataModel> {
+    fun getImagesFromFolderID(context: Context, folderID: String,
+                              selectedId: ArrayList<String>): List<ImageDataModel> {
 
-//        val projection = arrayOf(MediaStore.MediaColumns.DATA, MediaStore.Images.Media.DISPLAY_NAME)
-//        val cursor = context.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
-//                folderID, null, MediaStore.Images.Media.DATE_TAKEN + " DESC")
-//                ?: return emptyList()
-//        var column_index_data: Int
-//        var column_index_folder_name: Int
-//        var absolutePathOfImage: String? = null
-//        var imageName: String
-//        if (cursor.moveToFirst()) {
-//
-//            column_index_data = cursor!!.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)
-//
-//            column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
-//
-//            do {
-//                absolutePathOfImage = cursor.getString(column_index_data)
-//
-//                imageName = cursor.getString(column_index_folder_name)
-//                allImages.add(ImageDataModel(imageName, absolutePathOfImage))
-//            } while (cursor.moveToNext())
-//        }
-//
         val allImagesByFolder = ArrayList<ImageDataModel>()
 
         allImagesByFolder.clear()
@@ -363,7 +347,10 @@ object GalleryHelper {
 
             id = cursor.getString(imgId)
 
-            allImagesByFolder.add(ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE))
+            val model = ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE)
+            if (selectedId.contains(id))
+                model.selected = true
+            allImagesByFolder.add(model)
         }
 
         // Get all Internal storage images
@@ -386,7 +373,10 @@ object GalleryHelper {
 
             id = cursor.getString(imgId)
 
-            allImagesByFolder.add(ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE))
+            val model = ImageDataModel(imageName, absolutePathOfImage, id, AppConstants.TYPE_IMAMGE)
+            if (selectedId.contains(id))
+                model.selected = true
+            allImagesByFolder.add(model)
         }
         return allImagesByFolder
     }

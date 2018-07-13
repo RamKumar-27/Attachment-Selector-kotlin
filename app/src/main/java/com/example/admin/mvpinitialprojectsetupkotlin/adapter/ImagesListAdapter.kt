@@ -25,7 +25,8 @@ import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.request.RequestOptions
 
 
-class ImagesListAdapter(val context: Context, val isVideo: Boolean) : RecyclerView.Adapter<ImagesListAdapter.FolderDetailViewHolder>() {
+class ImagesListAdapter(val context: Context, val isVideo: Boolean, val listner: onFolderImageClickedListner) :
+        RecyclerView.Adapter<ImagesListAdapter.FolderDetailViewHolder>() {
 
     private var folderDetailItemList: ArrayList<ImageDataModel>?
     private val inflater: LayoutInflater
@@ -41,6 +42,11 @@ class ImagesListAdapter(val context: Context, val isVideo: Boolean) : RecyclerVi
         folderDetailItemList!!.addAll(itemList)
         notifyDataSetChanged()
     }
+
+    interface onFolderImageClickedListner {
+        fun onFolderImageClicked(imageModel: ImageDataModel)
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderDetailViewHolder {
 
@@ -114,6 +120,9 @@ class ImagesListAdapter(val context: Context, val isVideo: Boolean) : RecyclerVi
                 selectedItem.selected = false
 
             }
+            if (listner != null)
+                listner.onFolderImageClicked(selectedItem)
+
         }
 
     }

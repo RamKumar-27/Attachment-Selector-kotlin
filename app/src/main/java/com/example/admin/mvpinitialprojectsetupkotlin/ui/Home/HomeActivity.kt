@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.widget.ImageView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.admin.mvpinitialprojectsetupkotlin.R
@@ -16,19 +15,19 @@ import com.example.admin.mvpinitialprojectsetupkotlin.adapter.HomePagerAdapter
 import com.example.admin.mvpinitialprojectsetupkotlin.app.AppController
 import com.example.admin.mvpinitialprojectsetupkotlin.base.BaseActivity
 import com.example.admin.mvpinitialprojectsetupkotlin.base.MainThreadBus
-import com.example.admin.mvpinitialprojectsetupkotlin.data.HomeBackPressEvent
-import com.example.admin.mvpinitialprojectsetupkotlin.data.model.HeaderItemModel
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.ImageDataModel
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.SelectedItemModel
 import com.example.admin.mvpinitialprojectsetupkotlin.ui.fragments.*
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_home.*
 import android.widget.TextView
-import com.example.admin.mvpinitialprojectsetupkotlin.R.style.dialog
 import com.example.admin.mvpinitialprojectsetupkotlin.adapter.SelectedDataAdapter
+import com.example.admin.mvpinitialprojectsetupkotlin.data.eventBus.*
+import com.example.admin.mvpinitialprojectsetupkotlin.utils.GalleryHelper
 
 
 class HomeActivity : BaseActivity() {
+
     private val homePagerAdapter = HomePagerAdapter(supportFragmentManager)
     private var fragmentList = ArrayList<Fragment>()
     private var bus: MainThreadBus? = null
@@ -54,6 +53,25 @@ class HomeActivity : BaseActivity() {
 
     }
 
+    @Subscribe
+    fun reciveDataRequest(event: RequestDataEvent) {
+        if (event.needData)
+            postDatasToFragments()
+
+    }
+
+    @Subscribe
+    fun reciveFolderDataRequest(event: RequestFolderDataEvent) {
+        if (event.needData)
+            bus!!.post(FolderDetailImagesDataEvent(GalleryHelper.getImagesFromFolderID(this,
+                    event.folderId,selectedId)))
+    }
+
+    private fun postDatasToFragments() {
+        bus!!.post(ImagesDataEvent(GalleryHelper.gettAllImages(this, selectedId)))
+        bus!!.post(FolderDataEvent(GalleryHelper.getImageFolders(this)))
+    }
+
     override fun onBackPressed() {
         bus!!.post(HomeBackPressEvent(true))
     }
@@ -66,7 +84,6 @@ class HomeActivity : BaseActivity() {
     @OnClick(R.id.tv_selected)
     fun onSelectedClick() {
         val dialog = Dialog(this, R.style.dialog)
-        // Include dialog.xml file
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_selected)
         dialog.setCancelable(true)
@@ -91,7 +108,7 @@ class HomeActivity : BaseActivity() {
     @Subscribe
     fun onSelectedEvent(event: ImageDataModel) {
         if (event.selected == true) {
-            selectedList.add(SelectedItemModel(event.file, event.mimeType!!, event.imgId,event.type))
+            selectedList.add(SelectedItemModel(event.file, event.mimeType!!, event.imgId, event.type))
             selectedId.add(event.imgId)
         } else {
             selectedId.indexOf(event.imgId)
@@ -107,4 +124,5 @@ class HomeActivity : BaseActivity() {
 
         Log.e("selected count", (selectedList.size).toString())
     }
+
 }

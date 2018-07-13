@@ -15,6 +15,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.admin.mvpinitialprojectsetupkotlin.R
+import com.example.admin.mvpinitialprojectsetupkotlin.app.AppConstants
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.SelectedItemModel
 import java.util.*
 
@@ -71,10 +72,17 @@ class SelectedDataAdapter(val context: Context) : RecyclerView.Adapter<SelectedD
         fun setDataToView(item: SelectedItemModel) {
             tvTitle.text = item.file!!.name
             tvAudioSize.text = item.size
-            Glide.with(context)
-                    .load(item.file!!.absolutePath)
-                    .apply(RequestOptions().centerCrop())
-                    .into(tvExtention)
+            if (item.type == AppConstants.TYPE_IMAMGE || item.type == AppConstants.TYPE_VIDEO)
+                Glide.with(context)
+                        .load(item.file!!.absolutePath)
+                        .apply(RequestOptions().centerCrop())
+                        .into(tvExtention)
+            else if (item.type == AppConstants.TYPE_AUDIO)
+                tvExtention.setImageResource(R.drawable.ic_audio_file)
+            else if (item.type == AppConstants.TYPE_PDF)
+                tvExtention.setImageResource(R.drawable.ic_pdf)
+            else if (item.type == AppConstants.TYPE_DOC || item.type == AppConstants.TYPE_DOC)
+                tvExtention.setImageResource(R.drawable.ic_doc)
 
         }
 
