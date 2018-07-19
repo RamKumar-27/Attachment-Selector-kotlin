@@ -469,19 +469,23 @@ object FileUtils {
         return fileName
     }
 
+    fun getFileExtension(filePath: String): String {
+        if (TextUtils.isEmpty(filePath)) {
+            return ""
+        }
+        var extension = ""
+        val pos = filePath.lastIndexOf('.')
+        if (pos != -1) {
+            extension = filePath.substring(filePath.lastIndexOf('.') + 1,
+                    filePath.length)
+            return extension
+        } else
+            return "*/*"
+    }
+
 
     fun getMimeType(fileUrl: String): String {
-        if (TextUtils.isEmpty(fileUrl))
-            return ""
-        if (fileUrl.contains("jpg") || fileUrl.contains("jpeg") || fileUrl.contains("png") || fileUrl.contains("gif"))
-            return String.format("image/%s", fileUrl.substring(fileUrl.lastIndexOf(".")).replace("\\.".toRegex(), ""))
-        else if (fileUrl.contains("doc") || fileUrl.contains("docx"))
-            return "application/msword"
-        else if (fileUrl.contains("pdf"))
-            return "application/pdf"
-        return if (fileUrl.contains("mp3") || fileUrl.contains("m4a") || fileUrl.contains("wav"))
-            String.format("audio/%s", fileUrl.substring(fileUrl.lastIndexOf(".")).replace("\\.".toRegex(), ""))
-        else ""
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(getFileExtension(fileUrl))
     }
 
 }

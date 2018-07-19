@@ -55,7 +55,6 @@ object GalleryHelper {
                 } catch (e: Exception) {
 
                 }
-
             } while (c.moveToNext())
             directories.addAll(dirList)
             dirList.toTypedArray()
@@ -327,7 +326,7 @@ object GalleryHelper {
         uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
         val projection = arrayOf(MediaStore.MediaColumns.DATA, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media._ID)
-        val cursorLoader = CursorLoader(context, uri, projection, folderID, null, null)
+        val cursorLoader = CursorLoader(context, uri, projection, folderID, null, MediaStore.Images.Media.DATE_TAKEN + " DESC")
 
         //    cursor = activity.getContentResolver().query(uri, projection, null, null, null);
         cursor = cursorLoader.loadInBackground()
@@ -357,7 +356,7 @@ object GalleryHelper {
 
         uri = android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI
 
-        cursor = context.contentResolver.query(uri, projection, null, null, null)
+        cursor = context.contentResolver.query(uri, projection, null, null, MediaStore.Images.Media.DATE_TAKEN + " DESC")
 
         column_index_data = cursor!!.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)
 

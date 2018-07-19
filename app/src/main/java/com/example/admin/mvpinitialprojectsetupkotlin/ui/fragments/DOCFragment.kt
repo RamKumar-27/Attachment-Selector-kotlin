@@ -11,14 +11,21 @@ import com.example.admin.mvpinitialprojectsetupkotlin.adapter.AudioAdapter
 import com.example.admin.mvpinitialprojectsetupkotlin.adapter.DocumentAdapter
 import com.example.admin.mvpinitialprojectsetupkotlin.adapter.ImagesListAdapter
 import com.example.admin.mvpinitialprojectsetupkotlin.app.AppConstants
+import com.example.admin.mvpinitialprojectsetupkotlin.app.AppController
 import com.example.admin.mvpinitialprojectsetupkotlin.base.BaseFragment
+import com.example.admin.mvpinitialprojectsetupkotlin.base.MainThreadBus
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.ImageDataModel
 import com.example.admin.mvpinitialprojectsetupkotlin.utils.AudioHelper
 import com.example.admin.mvpinitialprojectsetupkotlin.utils.DocumentFileHelper
 import kotlinx.android.synthetic.main.fragment_videos.*
 import java.util.ArrayList
 
-class DOCFragment : BaseFragment() {
+class DOCFragment : BaseFragment(), DocumentAdapter.onDocumentClickedListner {
+    override fun onDocumentClicked(imageModel: ImageDataModel) {
+        bus!!.post(imageModel)
+    }
+
+    private var bus: MainThreadBus? = null
     private var recAdapter: DocumentAdapter? = null
     private var allfiles: ArrayList<ImageDataModel>? = null
 
@@ -29,11 +36,18 @@ class DOCFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        bus = AppController.getInstanse()!!.getBus()
+        bus!!.register(this)
         rec_view_video.layoutManager = LinearLayoutManager(activity!!)
-        recAdapter = DocumentAdapter(activity!!)
+        recAdapter = DocumentAdapter(activity!!, this)
         rec_view_video.adapter = recAdapter
         allfiles = DocumentFileHelper.getDocumentListFromStorage(activity!!, "doc", AppConstants.TYPE_DOC)
         allfiles!!.addAll(DocumentFileHelper.getDocumentListFromStorage(activity!!, "docx", AppConstants.TYPE_DOCX))
         recAdapter!!.setImageList(allfiles!!, R.drawable.ic_doc)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        bus!!.unregister(this)
     }
 }

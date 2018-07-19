@@ -16,7 +16,7 @@ class ImageDataModel(var imageTitle: String?, var imagePath: String?,var  imgId:
     var file: File? = null
         get() = File(imagePath!!)
     var mimeType: String? = null
-        get() = FileUtils.getMimeType(imageTitle!!)
+        get() = FileUtils.getMimeType(file!!.name)
     var size: String? = null
         get() = FileUtils.getSizeFromFile(file!!.length())
     var dateCreated: String? = null

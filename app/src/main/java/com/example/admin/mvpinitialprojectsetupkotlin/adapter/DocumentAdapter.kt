@@ -18,7 +18,7 @@ import com.example.admin.mvpinitialprojectsetupkotlin.data.model.ImageDataModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DocumentAdapter(val context: Context) : RecyclerView.Adapter<DocumentAdapter.FolderDetailViewHolder>() {
+class DocumentAdapter(val context: Context, val listner: onDocumentClickedListner) : RecyclerView.Adapter<DocumentAdapter.FolderDetailViewHolder>() {
 
     private var audioList: ArrayList<ImageDataModel>?
     private val inflater: LayoutInflater
@@ -27,6 +27,9 @@ class DocumentAdapter(val context: Context) : RecyclerView.Adapter<DocumentAdapt
     init {
         audioList = ArrayList()
         inflater = LayoutInflater.from(context)
+    }
+    interface onDocumentClickedListner {
+        fun onDocumentClicked(imageModel: ImageDataModel)
     }
 
     fun setImageList(itemList: ArrayList<ImageDataModel>, image: Int) {
@@ -110,6 +113,9 @@ class DocumentAdapter(val context: Context) : RecyclerView.Adapter<DocumentAdapt
                 selectedItem.selected = false
 
             }
+            if (listner != null)
+                listner.onDocumentClicked(selectedItem)
+
         }
 
 
