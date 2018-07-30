@@ -19,7 +19,7 @@ import com.example.admin.mvpinitialprojectsetupkotlin.app.AppConstants
 import com.example.admin.mvpinitialprojectsetupkotlin.data.model.SelectedItemModel
 import java.util.*
 
-class SelectedDataAdapter(val context: Context) : RecyclerView.Adapter<SelectedDataAdapter.FolderDetailViewHolder>() {
+class SelectedDataAdapter(val context: Context, val listner: onSelectedDataClicked) : RecyclerView.Adapter<SelectedDataAdapter.FolderDetailViewHolder>() {
 
     private var audioList: ArrayList<SelectedItemModel>?
     private val inflater: LayoutInflater
@@ -35,6 +35,10 @@ class SelectedDataAdapter(val context: Context) : RecyclerView.Adapter<SelectedD
         audioList!!.clear()
         audioList!!.addAll(itemList)
         notifyDataSetChanged()
+    }
+
+    interface onSelectedDataClicked {
+        fun onDeleteImage(position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderDetailViewHolder {
@@ -84,6 +88,15 @@ class SelectedDataAdapter(val context: Context) : RecyclerView.Adapter<SelectedD
             else if (item.type == AppConstants.TYPE_DOC || item.type == AppConstants.TYPE_DOC)
                 tvExtention.setImageResource(R.drawable.ic_doc)
 
+        }
+
+        @OnClick(R.id.img_clear)
+        fun onImageDeleteClicked() {
+            if (listner != null) {
+                listner.onDeleteImage(adapterPosition)
+                audioList!!.removeAt(adapterPosition)
+                notifyDataSetChanged()
+            }
         }
 
 

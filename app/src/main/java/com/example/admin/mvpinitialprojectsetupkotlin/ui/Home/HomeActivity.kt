@@ -1,13 +1,10 @@
 package com.example.admin.mvpinitialprojectsetupkotlin.ui.Home
 
-import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import android.view.Window
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.admin.mvpinitialprojectsetupkotlin.R
@@ -20,13 +17,12 @@ import com.example.admin.mvpinitialprojectsetupkotlin.data.model.SelectedItemMod
 import com.example.admin.mvpinitialprojectsetupkotlin.ui.fragments.*
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_home.*
-import android.widget.TextView
 import com.example.admin.mvpinitialprojectsetupkotlin.adapter.SelectedDataAdapter
 import com.example.admin.mvpinitialprojectsetupkotlin.data.eventBus.*
 import com.example.admin.mvpinitialprojectsetupkotlin.utils.GalleryHelper
 import android.support.design.widget.BottomSheetBehavior
-import android.R.id.button2
 import android.util.DisplayMetrics
+import com.example.admin.mvpinitialprojectsetupkotlin.utils.FileUtils
 
 
 class HomeActivity : BaseActivity() {
@@ -63,8 +59,10 @@ class HomeActivity : BaseActivity() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
 //                if (newState== BottomSheetBehavior.STATE_EXPANDED)
 //                    mBottomSheetBehavior1!!.peekHeight = 150
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED)
-                    mBottomSheetBehavior1!!.peekHeight = 0
+//                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+//                    dim_layout.visibility = View.GONE
+//                    mBottomSheetBehavior1!!.peekHeight = 80
+//                }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
@@ -106,26 +104,42 @@ class HomeActivity : BaseActivity() {
         bus!!.unregister(this)
     }
 
+    @OnClick(R.id.tv_clear_all)
+    fun onClearAllCicked() {
+        selectedList.clear()
+        selectedId.clear()
+        homePagerAdapter.notifyDataSetChanged()
+        mBottomSheetBehavior1!!.peekHeight = 0
+        mBottomSheetBehavior1!!.state = BottomSheetBehavior.STATE_COLLAPSED
+        selected_layout.visibility = View.GONE
+        dim_layout.visibility = View.GONE
+
+
+    }
+
+    @OnClick(R.id.dim_layout)
+    fun onDummyViewClicked() {
+        mBottomSheetBehavior1!!.peekHeight = 0
+        dim_layout.visibility = View.GONE
+    }
+
     @OnClick(R.id.tv_selected)
     fun onSelectedClick() {
-//        val dialog = Dialog(this, R.style.dialog)
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-//        dialog.setContentView(R.layout.dialog_selected)
-//        dialog.setCancelable(true)
+        val selectedAdapter = SelectedDataAdapter(this, object : SelectedDataAdapter.onSelectedDataClicked {
+            override fun onDeleteImage(position: Int) {
+                selectedList.removeAt(position)
+                selectedId.removeAt(position)
 
-//        val tvClear = dialog.findViewById(R.id.tv_clear_all) as TextView
-//        val tvSize = dialog.findViewById(R.id.tv_clear_all) as TextView
-//        val recView = dialog.findViewById(R.id.rec_view_selected) as RecyclerView
+            }
 
-        val selectedAdapter = SelectedDataAdapter(this)
+        })
+
         rec_view_selected.layoutManager = LinearLayoutManager(this)
         rec_view_selected.adapter = selectedAdapter
         selectedAdapter.setImageList(selectedList)
-//        mBottomSheetBehavior1!!.state = BottomSheetBehavior.STATE_EXPANDED
 
+        dim_layout.visibility = View.VISIBLE
         mBottomSheetBehavior1!!.peekHeight = height / 3
-
-//        dialog.show()
 
     }
 
@@ -151,7 +165,11 @@ class HomeActivity : BaseActivity() {
             selected_layout.visibility = View.VISIBLE
         tv_selected.text = selectedList.size.toString() + " Selected"
 
+        var totalsize: Long = 0
+        selectedList.forEach { totalsize += it.file!!.length() }
+        tv_total_size.setText(FileUtils.getSizeFromFile(totalsize))
         Log.e("selected count", (selectedList.size).toString())
+
     }
 
 
