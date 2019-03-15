@@ -1,0 +1,31 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Marzin Sizes -->
+    <dimen name="margin_very_small">6dp</dimen>
+    <dimen name="margin_small">10dp</dimen>
+    <dimen name="margin_normal">15dp</dimen>
+
+    <!-- Padding Sizes -->
+    <dimen name="padding_small">10dp</dimen>
+    <dimen name="padding_normal">15dp</dimen>
+    <dimen name="padding_max">20dp</dimen>
+
+    <!--Text Sizes-->
+    <dimen name="txtVeryLittle">12sp</dimen>
+    <dimen name="txtLittle">14sp</dimen>
+    <dimen name="txtVerySmall">14sp</dimen>
+    <dimen name="txtSmall">18sp</dimen>
+    <dimen name="txtNormal">20sp</dimen>
+    <dimen name="txtLarge">25sp</dimen>
+    <dimen name="txtVeryLarge">28sp</dimen>
+
+    <!--bg circle-->
+    <dimen name="bg_circle_normal">90dp</dimen>
+
+    <!--aroma sizes-->
+    <dimen name="aroma_category_size">60dp</dimen>
+
+</resources>

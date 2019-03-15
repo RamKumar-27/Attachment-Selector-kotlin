@@ -1,0 +1,8 @@
+<manifest package="ram.attachmentSelector"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+
+        <activity android:name=".ui.Home.HomeActivity"/>
+    </application>
+</manifest>
