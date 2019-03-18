@@ -1,6 +1,11 @@
 ## Description
    The Sample application for attachments selection, with all your internal and external storage media's without any time delay like **SHAREit** app .
    
+## ScreenShot
+<img src="screenshot/first_page.jpeg" width="300" height="650"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="screenshot/second_page.jpeg" width="300" height="650">
+<img src="screenshot/third_page.jpeg" width="300" height="650">
+
+   
    
 ## Usage
   Import the **AttachmentLibrary** package in your own project and 
